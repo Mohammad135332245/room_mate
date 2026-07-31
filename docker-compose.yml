@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: roomiema
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./rommie-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/roomiema
+      JWT_SECRET_KEY: dev-secret-change-me
+      CORS_ORIGINS: http://localhost:5173
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./rommie-backend:/code
+
+volumes:
+  pgdata:

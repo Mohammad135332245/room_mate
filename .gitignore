@@ -1,0 +1,12 @@
+# Local tool state — machine-specific, not shared
+.claude/settings.local.json
+.claude/*.tmp.*
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
